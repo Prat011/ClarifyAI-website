@@ -73,7 +73,7 @@ const LandingPage = () => {
       </section>
 
       {/* Features Section */}
-      <section id="features" className="min-h-screen flex items-center justify-center bg-gray-900">
+      <section id="features" className="min-h-screen flex items-center justify-center bg-black-900">
         <div className="container mx-auto px-4">
           <h2 className="text-4xl font-bold mb-12 text-center">Empower Your Programming Journey</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -102,7 +102,7 @@ const LandingPage = () => {
       </section>
 
       {/* Call to Action Section */}
-      <section id="cta" className="min-h-screen flex items-center justify-center bg-gray-800">
+      <section id="cta" className="min-h-screen flex items-center justify-center bg-black-800">
         <div className="container mx-auto text-center px-4">
           <h2 className="text-4xl font-bold mb-8">Ready to elevate your programming skills?</h2>
           <a href="https://dub.sh/clarifyai" target="_blank" rel="noopener noreferrer" className="bg-white text-black hover:bg-gray-200 font-bold py-3 px-8 rounded-full text-lg transition duration-300 inline-block">
@@ -116,7 +116,7 @@ const LandingPage = () => {
 };
 
 const FeatureCard = ({ icon, title, description }) => (
-  <div className="bg-gray-800 p-6 rounded-lg text-center hover:bg-gray-700 transition duration-300">
+  <div className="bg-white-800 p-6 rounded-lg text-center hover:bg-gray-700 transition duration-300">
     <div className="flex justify-center mb-4">{icon}</div>
     <h3 className="text-xl font-bold mb-2">{title}</h3>
     <p>{description}</p>
