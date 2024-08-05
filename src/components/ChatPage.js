@@ -11,6 +11,19 @@ const ChatPage = () => {
   const [messages, setMessages] = useState([]);
   const [setupMessage, setSetupMessage] = useState('');
 
+  useEffect(() => {
+    // Clear chat history on component mount (page load)
+    const clearChatHistory = async () => {
+      try {
+        await axios.post('https://prat0-clarifapi.hf.space/clear-chat/');
+        setMessages([]); // Clear local messages state
+      } catch (error) {
+        console.error('Error clearing chat history:', error);
+      }
+    };
+    clearChatHistory();
+  }, []);
+
   const handleSetup = async () => {
     if (!collectionName) {
       setSetupMessage('Collection name is required.');
@@ -19,7 +32,7 @@ const ChatPage = () => {
 
     try {
       const response = await axios.post('https://prat0-clarifapi.hf.space/setup/', {
-        url: docLink || '', // Send an empty string if docLink is empty
+        url: docLink || '',
         collection_name: collectionName
       });
       setSetupMessage(response.data.message);
@@ -51,17 +64,6 @@ const ChatPage = () => {
     }
   };
 
-  useEffect(() => {
-    const fetchChatHistory = async () => {
-      try {
-        const response = await axios.get('https://prat0-clarifapi.hf.space/chat-history/');
-        setMessages(response.data.chat_history.map(([role, content]) => ({ role, content })));
-      } catch (error) {
-        console.error('Error fetching chat history:', error);
-      }
-    };
-    fetchChatHistory();
-  }, []);
 
   return (
     <div className="min-h-screen bg-black text-white flex flex-col">
