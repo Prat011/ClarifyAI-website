@@ -18,7 +18,7 @@ const ChatPage = () => {
     }
 
     try {
-      const response = await axios.post('https://huggingface.co/spaces/Prat0/clarifapi/setup', {
+      const response = await axios.post('https://prat0-clarifapi.hf.space/setup', {
         url: docLink || '', // Send an empty string if docLink is empty
         collection_name: collectionName
       });
@@ -36,7 +36,7 @@ const ChatPage = () => {
       return;
     }
     try {
-      const response = await axios.post('https://huggingface.co/spaces/Prat0/clarifapi/query', { query });
+      const response = await axios.post('https://prat0-clarifapi.hf.space/query', { query });
       setMessages(prevMessages => [
         ...prevMessages,
         { role: 'user', content: query },
@@ -54,7 +54,7 @@ const ChatPage = () => {
   useEffect(() => {
     const fetchChatHistory = async () => {
       try {
-        const response = await axios.get('https://huggingface.co/spaces/Prat0/clarifapi/chat-history');
+        const response = await axios.get('https://prat0-clarifapi.hf.space/chat-history');
         setMessages(response.data.chat_history.map(([role, content]) => ({ role, content })));
       } catch (error) {
         console.error('Error fetching chat history:', error);
