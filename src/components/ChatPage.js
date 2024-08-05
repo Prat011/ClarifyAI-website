@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { SparklesIcon, SearchIcon } from 'lucide-react';
+import { SparklesIcon, SearchIcon, Loader } from 'lucide-react';
 import axios from 'axios';
 
 const ChatPage = () => {
@@ -10,13 +10,13 @@ const ChatPage = () => {
   const [setupComplete, setSetupComplete] = useState(false);
   const [messages, setMessages] = useState([]);
   const [setupMessage, setSetupMessage] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    // Clear chat history on component mount (page load)
     const clearChatHistory = async () => {
       try {
         await axios.post('https://prat0-clarifapi.hf.space/clear-chat/');
-        setMessages([]); // Clear local messages state
+        setMessages([]);
       } catch (error) {
         console.error('Error clearing chat history:', error);
       }
@@ -30,6 +30,7 @@ const ChatPage = () => {
       return;
     }
 
+    setIsLoading(true);
     try {
       const response = await axios.post('https://prat0-clarifapi.hf.space/setup/', {
         url: docLink || '',
@@ -39,6 +40,8 @@ const ChatPage = () => {
       setSetupComplete(true);
     } catch (error) {
       setSetupMessage('Error during setup: ' + error.response?.data?.detail || error.message);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -48,6 +51,7 @@ const ChatPage = () => {
       setSetupMessage('Please complete the setup first.');
       return;
     }
+    setIsLoading(true);
     try {
       const response = await axios.post('https://prat0-clarifapi.hf.space/query/', { query });
       setMessages(prevMessages => [
@@ -61,9 +65,10 @@ const ChatPage = () => {
         ...prevMessages,
         { role: 'error', content: 'Error: ' + error.response?.data?.detail || error.message }
       ]);
+    } finally {
+      setIsLoading(false);
     }
   };
-
 
   return (
     <div className="min-h-screen bg-black text-white flex flex-col">
@@ -99,8 +104,10 @@ const ChatPage = () => {
               />
               <button
                 onClick={handleSetup}
-                className="w-full p-3 rounded-lg bg-gray-700 hover:bg-gray-600 transition duration-300"
+                disabled={isLoading}
+                className="w-full p-3 rounded-lg bg-gray-700 hover:bg-gray-600 transition duration-300 flex items-center justify-center"
               >
+                {isLoading ? <Loader className="animate-spin mr-2" /> : null}
                 Setup
               </button>
             </div>
@@ -132,9 +139,10 @@ const ChatPage = () => {
             />
             <button
               type="submit"
+              disabled={isLoading}
               className="p-3 rounded-lg bg-white text-black hover:bg-gray-200 transition duration-300 flex items-center justify-center"
             >
-              <SearchIcon className="mr-2" />
+              {isLoading ? <Loader className="animate-spin mr-2" /> : <SearchIcon className="mr-2" />}
               Search
             </button>
           </div>
