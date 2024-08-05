@@ -12,9 +12,14 @@ const ChatPage = () => {
   const [setupMessage, setSetupMessage] = useState('');
 
   const handleSetup = async () => {
+    if (!collectionName) {
+      setSetupMessage('Collection name is required.');
+      return;
+    }
+
     try {
       const response = await axios.post('https://huggingface.co/spaces/Prat0/clarifapi/setup', {
-        url: docLink,
+        url: docLink || '', // Send an empty string if docLink is empty
         collection_name: collectionName
       });
       setSetupMessage(response.data.message);
@@ -49,7 +54,7 @@ const ChatPage = () => {
   useEffect(() => {
     const fetchChatHistory = async () => {
       try {
-        const response = await axios.get('https://huggingface.co/spaces/Prat0/clarifapi/query');
+        const response = await axios.get('https://huggingface.co/spaces/Prat0/clarifapi/chat-history');
         setMessages(response.data.chat_history.map(([role, content]) => ({ role, content })));
       } catch (error) {
         console.error('Error fetching chat history:', error);
@@ -87,7 +92,7 @@ const ChatPage = () => {
                 type="text"
                 value={collectionName}
                 onChange={(e) => setCollectionName(e.target.value)}
-                placeholder="Enter collection name"
+                placeholder="Enter collection name (required)"
                 className="w-full p-3 rounded-lg bg-gray-800 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-white"
               />
               <button
@@ -133,7 +138,6 @@ const ChatPage = () => {
           </div>
         </form>
       </div>
-
     </div>
   );
 };
