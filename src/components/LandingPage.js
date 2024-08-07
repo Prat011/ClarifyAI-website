@@ -1,213 +1,132 @@
 import React, { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
-import { ChevronDown, Send } from 'lucide-react';
+import { TerminalIcon, BookOpenIcon, CodeIcon, SparklesIcon, ChevronDownIcon, MessageSquareIcon, MenuIcon } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
-const AegisWebsite = () => {
-  const [currentSection, setCurrentSection] = useState(0);
+const LandingPage = () => {
+  const [activeSection, setActiveSection] = useState('hero');
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  const sections = ['hero', 'features', 'cta'];
+
+  const scrollTo = (section) => {
+    setActiveSection(section);
+    setIsMenuOpen(false);
+    document.getElementById(section).scrollIntoView({ behavior: 'smooth' });
+  };
 
   useEffect(() => {
     const handleScroll = () => {
       const scrollPosition = window.scrollY;
-      const windowHeight = window.innerHeight;
-      const newSection = Math.floor(scrollPosition / windowHeight);
-      setCurrentSection(newSection);
+      
+      sections.forEach((section) => {
+        const element = document.getElementById(section);
+        if (element) {
+          const { offsetTop, offsetHeight } = element;
+          if (scrollPosition >= offsetTop && scrollPosition < offsetTop + offsetHeight) {
+            setActiveSection(section);
+          }
+        }
+      });
     };
 
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const projectData = [
-    { title: "AI Assistant", image: "/api/placeholder/300/200", description: "An advanced AI assistant for customer support." },
-    { title: "Data Analytics", image: "/api/placeholder/300/200", description: "Powerful data analytics platform for business insights." },
-    { title: "Smart Home", image: "/api/placeholder/300/200", description: "Innovative smart home solutions powered by AI." },
-    { title: "Health Tech", image: "/api/placeholder/300/200", description: "AI-driven health monitoring and prediction system." },
-  ];
-
-  const sections = [
-    {
-      id: 'intro',
-      content: (
-        <div className="flex flex-col items-center justify-center h-screen bg-gradient-to-br from-purple-700 to-indigo-900 text-white">
-          <motion.h1 
-            className="text-6xl font-bold mb-4"
-            initial={{ opacity: 0, y: -50 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 1 }}
-          >
-            Aegis
-          </motion.h1>
-          <motion.p 
-            className="text-2xl mb-8"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.5, duration: 1 }}
-          >
-            Empowering Businesses with Intelligent Solutions
-          </motion.p>
-          <motion.div
-            className="w-32 h-32 rounded-full bg-white"
-            animate={{
-              scale: [1, 1.2, 1],
-              rotate: [0, 180, 360],
-            }}
-            transition={{
-              duration: 2,
-              ease: "easeInOut",
-              times: [0, 0.5, 1],
-              repeat: Infinity,
-              repeatDelay: 1
-            }}
-          />
-        </div>
-      ),
-    },
-    {
-      id: 'about',
-      content: (
-        <div className="flex items-center justify-center h-screen bg-gradient-to-br from-blue-500 to-teal-400 text-white overflow-hidden">
-          <div className="max-w-4xl mx-auto px-4 relative z-10">
-            <h2 className="text-4xl font-bold mb-6">What We Do</h2>
-            <div className="flex items-center">
-              <div className="w-1/2 pr-8">
-                <p className="text-lg mb-4">
-                  We specialize in building cutting-edge AI solutions:
-                </p>
-                <ul className="list-disc list-inside">
-                  <li>Retrieval-Augmented Generation (RAG) systems</li>
-                  <li>AI agents for task automation</li>
-                  <li>Custom AI integrations for businesses</li>
-                  <li>AI strategy consulting</li>
-                </ul>
-              </div>
-            </div>
+  return (
+    <div className="min-h-screen bg-black text-white">
+      {/* Navigation */}
+      <nav className="fixed top-0 left-0 right-0 p-4 z-50 bg-black bg-opacity-80 backdrop-filter backdrop-blur-lg">
+        <div className="container mx-auto flex justify-between items-center">
+          <h1 className="text-2xl font-bold flex items-center">
+            <SparklesIcon className="mr-2" />
+            ClarifyAI
+          </h1>
+          <div className="md:hidden">
+            <button onClick={() => setIsMenuOpen(!isMenuOpen)} className="text-white">
+              <MenuIcon size={24} />
+            </button>
           </div>
-          <div className="absolute inset-0 z-0">
-            <motion.div
-              className="absolute inset-0"
-              animate={{
-                backgroundPosition: ['0% 0%', '100% 100%'],
-              }}
-              transition={{
-                duration: 20,
-                ease: "linear",
-                repeat: Infinity,
-                repeatType: "reverse",
-              }}
-              style={{
-                backgroundImage: 'url("data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'400\' height=\'400\' viewBox=\'0 0 800 800\'%3E%3Cg fill=\'none\' stroke=\'%23404\' stroke-width=\'1\'%3E%3Cpath d=\'M769 229L1037 260.9M927 880L731 737 520 660 309 538 40 599 295 764 126.5 879.5 40 599-197 493 102 382-31 229 126.5 79.5-69-63\'/%3E%3Cpath d=\'M-31 229L237 261 390 382 603 493 308.5 537.5 101.5 381.5M370 905L295 764\'/%3E%3Cpath d=\'M520 660L578 842 731 737 840 599 603 493 520 660 295 764 309 538 390 382 539 269 769 229 577.5 41.5 370 105 295 -36 126.5 79.5 237 261 102 382 40 599 -69 737 127 880\'/%3E%3Cpath d=\'M520-140L578.5 42.5 731-63M603 493L539 269 237 261 370 105M902 382L539 269M390 382L102 382\'/%3E%3Cpath d=\'M-222 42L126.5 79.5 370 105 539 269 577.5 41.5 927 80 769 229 902 382 603 493 731 737M295-36L577.5 41.5M578 842L295 764M40-201L127 80M102 382L-261 269\'/%3E%3C/g%3E%3Cg fill=\'%23505\'%3E%3Ccircle cx=\'769\' cy=\'229\' r=\'5\'/%3E%3Ccircle cx=\'539\' cy=\'269\' r=\'5\'/%3E%3Ccircle cx=\'603\' cy=\'493\' r=\'5\'/%3E%3Ccircle cx=\'731\' cy=\'737\' r=\'5\'/%3E%3Ccircle cx=\'520\' cy=\'660\' r=\'5\'/%3E%3Ccircle cx=\'309\' cy=\'538\' r=\'5\'/%3E%3Ccircle cx=\'295\' cy=\'764\' r=\'5\'/%3E%3Ccircle cx=\'40\' cy=\'599\' r=\'5\'/%3E%3Ccircle cx=\'102\' cy=\'382\' r=\'5\'/%3E%3Ccircle cx=\'127\' cy=\'80\' r=\'5\'/%3E%3Ccircle cx=\'370\' cy=\'105\' r=\'5\'/%3E%3Ccircle cx=\'578\' cy=\'42\' r=\'5\'/%3E%3Ccircle cx=\'237\' cy=\'261\' r=\'5\'/%3E%3Ccircle cx=\'390\' cy=\'382\' r=\'5\'/%3E%3C/g%3E%3C/svg%3E")',
-                backgroundSize: '400% 400%',
-              }}
+          <div className={`md:flex space-y-4 md:space-y-0 md:space-x-4 ${isMenuOpen ? 'block' : 'hidden'} absolute md:relative top-full left-0 right-0 bg-black md:bg-transparent p-4 md:p-0`}>
+            <button onClick={() => scrollTo('hero')} className={`block md:inline hover:text-gray-300 ${activeSection === 'hero' ? 'text-gray-300' : ''}`}>Home</button>
+            <button onClick={() => scrollTo('features')} className={`block md:inline hover:text-gray-300 ${activeSection === 'features' ? 'text-gray-300' : ''}`}>Features</button>
+            <a href="/chat" target="_blank" rel="noopener noreferrer" className="block md:inline bg-white text-black hover:bg-gray-200 font-bold py-2 px-4 rounded-full transition duration-300">
+              Use App
+            </a>
+          </div>
+        </div>
+      </nav>
+
+      {/* Hero Section */}
+      <section id="hero" className="min-h-screen flex items-center justify-center px-4">
+        <div className="container mx-auto text-center">
+          <h2 className="text-4xl md:text-5xl font-bold mb-4">Be the programmer you've always wanted to be</h2>
+          <p className="text-lg md:text-xl mb-8">Unlock your full potential with AI-powered software documentation assistance</p>
+          <div className="space-y-4 md:space-y-0 md:space-x-4">
+            <a href="/chat" target="_blank" rel="noopener noreferrer" className="block md:inline-block w-full md:w-auto bg-white text-black hover:bg-gray-200 font-bold py-3 px-8 rounded-full text-lg transition duration-300">
+              Use App
+            </a>
+            <button onClick={() => scrollTo('features')} className="block md:inline-block w-full md:w-auto bg-transparent border-2 border-white text-white hover:bg-white hover:text-black font-bold py-3 px-8 rounded-full text-lg transition duration-300">
+              Learn More
+            </button>
+          </div>
+        </div>
+        <ChevronDownIcon 
+          className="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce cursor-pointer" 
+          size={32} 
+          onClick={() => scrollTo('features')}
+        />
+      </section>
+
+      {/* Features Section */}
+      <section id="features" className="min-h-screen flex items-center justify-center bg-black-900 px-4">
+        <div className="container mx-auto">
+          <h2 className="text-3xl md:text-4xl font-bold mb-12 text-center">Empower Your Programming Journey</h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <FeatureCard
+              icon={<TerminalIcon size={48} />}
+              title="Master Complex Codebases"
+              description="Navigate and understand intricate software documentation with ease."
+            />
+            <FeatureCard
+              icon={<BookOpenIcon size={48} />}
+              title="Accelerate Learning"
+              description="Grasp new concepts quickly with interactive, AI-guided exploration."
+            />
+            <FeatureCard
+              icon={<CodeIcon size={48} />}
+              title="Boost Productivity"
+              description="Get instant answers and code examples to speed up your development process."
             />
           </div>
         </div>
-      ),
-    },
-    {
-      id: 'projects',
-      content: (
-        <div className="flex items-center justify-center h-screen bg-gradient-to-br from-green-500 to-yellow-400 text-white overflow-hidden">
-          <div className="max-w-4xl mx-auto px-4">
-            <h2 className="text-4xl font-bold mb-6">Our Projects</h2>
-            <div className="relative h-96 overflow-hidden">
-              <motion.div
-                className="flex absolute"
-                animate={{
-                  x: [0, -100 * projectData.length + '%'],
-                }}
-                transition={{
-                  x: {
-                    repeat: Infinity,
-                    repeatType: "loop",
-                    duration: 20,
-                    ease: "linear",
-                  },
-                }}
-              >
-                {[...projectData, ...projectData].map((project, index) => (
-                  <motion.div
-                    key={index}
-                    className="w-72 h-96 bg-white rounded-lg shadow-lg mx-4 flex-shrink-0 cursor-pointer perspective-1000"
-                    whileHover={{ rotateY: 180 }}
-                  >
-                    <motion.div className="w-full h-full relative">
-                      <div className="absolute w-full h-full backface-hidden">
-                        <img src={project.image} alt={project.title} className="w-full h-3/4 object-cover rounded-t-lg" />
-                        <div className="p-4 text-center text-gray-800">
-                          <h3 className="text-xl font-bold">{project.title}</h3>
-                        </div>
-                      </div>
-                      <div className="absolute w-full h-full backface-hidden bg-white rounded-lg flex items-center justify-center p-4 text-gray-800" style={{ transform: 'rotateY(180deg)' }}>
-                        <p>{project.description}</p>
-                      </div>
-                    </motion.div>
-                  </motion.div>
-                ))}
-              </motion.div>
-            </div>
-          </div>
-        </div>
-      ),
-    },
-    {
-      id: 'contact',
-      content: (
-        <div className="flex items-center justify-center h-screen bg-gradient-to-br from-red-500 to-pink-500 text-white">
-          <div className="max-w-md w-full mx-auto px-4">
-            <h2 className="text-4xl font-bold mb-6 text-center">Contact Us</h2>
-            <form className="space-y-4">
-              <input
-                type="text"
-                placeholder="First Name"
-                className="w-full p-2 rounded text-gray-800"
-              />
-              <input
-                type="email"
-                placeholder="Email"
-                className="w-full p-2 rounded text-gray-800"
-              />
-              <input
-                type="text"
-                placeholder="Company"
-                className="w-full p-2 rounded text-gray-800"
-              />
-              <textarea
-                placeholder="Description"
-                rows={4}
-                className="w-full p-2 rounded text-gray-800"
-              ></textarea>
-              <button
-                type="submit"
-                className="w-full bg-white text-pink-500 py-2 rounded font-bold flex items-center justify-center"
-              >
-                Send <Send className="ml-2" size={20} />
-              </button>
-            </form>
-          </div>
-        </div>
-      ),
-    },
-  ];
+        <ChevronDownIcon 
+          className="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce cursor-pointer" 
+          size={32} 
+          onClick={() => scrollTo('cta')}
+        />
+      </section>
 
-  return (
-    <div className="snap-y snap-mandatory h-screen overflow-y-scroll">
-      {sections.map((section, index) => (
-        <div key={section.id} className="snap-start h-screen">
-          {section.content}
-          {index < sections.length - 1 && (
-            <motion.div
-              className="absolute bottom-4 left-1/2 transform -translate-x-1/2 cursor-pointer"
-              animate={{ y: [0, 10, 0] }}
-              transition={{ repeat: Infinity, duration: 1.5 }}
-              onClick={() => window.scrollTo({ top: (index + 1) * window.innerHeight, behavior: 'smooth' })}
-            >
-              <ChevronDown size={32} color="white" />
-            </motion.div>
-          )}
+      {/* Call to Action Section */}
+      <section id="cta" className="min-h-screen flex items-center justify-center bg-black-800 px-4">
+        <div className="container mx-auto text-center">
+          <h2 className="text-3xl md:text-4xl font-bold mb-8">Ready to elevate your programming skills?</h2>
+          <a href="/chat" target="_blank" rel="noopener noreferrer" className="block w-full md:w-auto md:inline-block bg-white text-black hover:bg-gray-200 font-bold py-3 px-8 rounded-full text-lg transition duration-300">
+            Start Using ClarifyAI Now
+          </a>
+          <p className="mt-8">&copy; 2024 ClarifyAI. Empowering programmers to reach new heights.</p>
         </div>
-      ))}
+      </section>
     </div>
   );
 };
 
-export default AegisWebsite;
+const FeatureCard = ({ icon, title, description }) => (
+  <div className="bg-white-800 p-6 rounded-lg text-center hover:bg-gray-700 transition duration-300">
+    <div className="flex justify-center mb-4">{icon}</div>
+    <h3 className="text-xl font-bold mb-2">{title}</h3>
+    <p>{description}</p>
+  </div>
+);
+
+export default LandingPage;
