@@ -50,7 +50,6 @@ const LandingPage = () => {
           <div className={`md:flex space-y-4 md:space-y-0 md:space-x-4 ${isMenuOpen ? 'block' : 'hidden'} absolute md:relative top-full left-0 right-0 bg-black md:bg-transparent p-4 md:p-0`}>
             <button onClick={() => scrollTo('hero')} className={`block md:inline hover:text-gray-300 ${activeSection === 'hero' ? 'text-gray-300' : ''}`}>Home</button>
             <button onClick={() => scrollTo('features')} className={`block md:inline hover:text-gray-300 ${activeSection === 'features' ? 'text-gray-300' : ''}`}>Features</button>
-            <Link to="/chat" className="block md:inline hover:text-gray-300">Chat</Link>
             <a href="/chat" target="_blank" rel="noopener noreferrer" className="block md:inline bg-white text-black hover:bg-gray-200 font-bold py-2 px-4 rounded-full transition duration-300">
               Use App
             </a>
