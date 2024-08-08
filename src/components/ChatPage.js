@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { SparklesIcon, SearchIcon, Loader, ToggleLeft } from 'lucide-react';
+import { SparklesIcon, SearchIcon, Loader, ToggleLeft, ToggleRight } from 'lucide-react';
 import axios from 'axios';
 
 const ChatPage = () => {
@@ -110,10 +110,17 @@ const ChatPage = () => {
                 className="w-full p-3 rounded-lg bg-gray-800 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-white"
               />
               <div className="flex items-center space-x-2">
-                <ToggleLeft
-                  className={`cursor-pointer ${useAgentSearch ? 'text-blue-500' : 'text-gray-500'}`}
-                  onClick={() => setUseAgentSearch(!useAgentSearch)}
-                />
+                {useAgentSearch ? (
+                  <ToggleRight
+                    className="cursor-pointer text-blue-500"
+                    onClick={() => setUseAgentSearch(!useAgentSearch)}
+                  />
+                ) : (
+                  <ToggleLeft
+                    className="cursor-pointer text-gray-500"
+                    onClick={() => setUseAgentSearch(!useAgentSearch)}
+                  />
+                )}
                 <span>Use Agent Search</span>
               </div>
               <button
@@ -148,7 +155,7 @@ const ChatPage = () => {
               type="text"
               value={query}
               onChange={(e) => setQuery(e.target.value)}
-              placeholder={useAgentSearch ? "Ask a question about your documentation" : "Enter a search query"}
+              placeholder={useAgentSearch ? "Enter a search query" : "Query the documentation"}
               className="flex-grow p-3 rounded-lg bg-gray-800 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-white"
             />
             <button
