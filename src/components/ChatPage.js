@@ -26,7 +26,7 @@ const ChatPage = () => {
   }, []);
 
   const handleSetup = async () => {
-    if (!collectionName) {
+    if (!useAgentSearch && !collectionName) {
       setSetupMessage('Collection name is required.');
       return;
     }
@@ -106,7 +106,7 @@ const ChatPage = () => {
                 type="text"
                 value={collectionName}
                 onChange={(e) => setCollectionName(e.target.value)}
-                placeholder="Enter collection name (required)"
+                placeholder={useAgentSearch ? "Collection name (not compulsory)" : "Collection name (required)"}
                 className="w-full p-3 rounded-lg bg-gray-800 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-white"
               />
               <div className="flex items-center space-x-2">
