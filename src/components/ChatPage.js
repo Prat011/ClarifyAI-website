@@ -90,7 +90,7 @@ const ChatPage = () => {
       </nav>
       
       <div className="flex-grow flex flex-col items-center justify-between p-4">
-        <div className="w-full max-w-2xl mb-8">
+        <div className="w-full mb-8">
           <h2 className="text-3xl font-bold mb-8 text-center">Chat with Your Documentation</h2>
           
           {!setupComplete && (
@@ -149,7 +149,7 @@ const ChatPage = () => {
           </div>
         </div>
 
-        <form onSubmit={handleSearch} className="w-full max-w-2xl">
+        <form onSubmit={handleSearch} className="w-full">
           <div className="flex space-x-2">
             <input
               type="text"
