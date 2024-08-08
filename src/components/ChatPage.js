@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { SparklesIcon, SearchIcon, Loader } from 'lucide-react';
+import { SparklesIcon, SearchIcon, Loader, ToggleLeft } from 'lucide-react';
 import axios from 'axios';
 
 const ChatPage = () => {
@@ -11,6 +11,7 @@ const ChatPage = () => {
   const [messages, setMessages] = useState([]);
   const [setupMessage, setSetupMessage] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [useAgentSearch, setUseAgentSearch] = useState(false);
 
   useEffect(() => {
     const clearChatHistory = async () => {
@@ -51,9 +52,15 @@ const ChatPage = () => {
       setSetupMessage('Please complete the setup first.');
       return;
     }
+
     setIsLoading(true);
     try {
-      const response = await axios.post('https://prat0-clarifapi.hf.space/query/', { query });
+      let response;
+      if (useAgentSearch) {
+        response = await axios.post('https://prat0-clarifapi.hf.space/agent-search/', { query });
+      } else {
+        response = await axios.post('https://prat0-clarifapi.hf.space/query/', { query });
+      }
       setMessages(prevMessages => [
         ...prevMessages,
         { role: 'user', content: query },
@@ -102,6 +109,13 @@ const ChatPage = () => {
                 placeholder="Enter collection name (required)"
                 className="w-full p-3 rounded-lg bg-gray-800 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-white"
               />
+              <div className="flex items-center space-x-2">
+                <ToggleLeft
+                  className={`cursor-pointer ${useAgentSearch ? 'text-blue-500' : 'text-gray-500'}`}
+                  onClick={() => setUseAgentSearch(!useAgentSearch)}
+                />
+                <span>Use Agent Search</span>
+              </div>
               <button
                 onClick={handleSetup}
                 disabled={isLoading}
@@ -134,7 +148,7 @@ const ChatPage = () => {
               type="text"
               value={query}
               onChange={(e) => setQuery(e.target.value)}
-              placeholder="Ask a question about your documentation"
+              placeholder={useAgentSearch ? "Ask a question about your documentation" : "Enter a search query"}
               className="flex-grow p-3 rounded-lg bg-gray-800 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-white"
             />
             <button
