@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { TerminalIcon, BookOpenIcon, CodeIcon, SparklesIcon, ChevronDownIcon, MessageSquareIcon, MenuIcon } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { Analytics } from "@vercel/analytics/react"
 
 const LandingPage = () => {
   const [activeSection, setActiveSection] = useState('hero');
