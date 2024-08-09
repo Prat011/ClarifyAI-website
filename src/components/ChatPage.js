@@ -170,6 +170,7 @@ const ChatPage = () => {
           </div>
         </form>
       </div>
+    <Analytics />
     </div>
   );
 };
