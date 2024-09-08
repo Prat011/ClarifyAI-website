@@ -26,8 +26,24 @@ const ChatPage = () => {
     clearChatHistory();
   }, []);
 
+  useEffect(() => {
+    if (useAgentSearch) {
+      setSetupMessage('Agent search is enabled. No setup required.');
+      setSetupComplete(true);
+    } else {
+      setSetupComplete(false);
+      setSetupMessage('');
+    }
+  }, [useAgentSearch]);
+
   const handleSetup = async () => {
-    if (!useAgentSearch && !collectionName) {
+    if (useAgentSearch) {
+      setSetupMessage('Agent search is enabled. No setup required.');
+      setSetupComplete(true);
+      return;
+    }
+
+    if (!collectionName) {
       setSetupMessage('Collection name is required.');
       return;
     }
@@ -49,7 +65,7 @@ const ChatPage = () => {
 
   const handleSearch = async (e) => {
     e.preventDefault();
-    if (!setupComplete) {
+    if (!setupComplete && !useAgentSearch) {
       setSetupMessage('Please complete the setup first.');
       return;
     }
@@ -94,7 +110,22 @@ const ChatPage = () => {
         <div className="w-full max-w-3xl mb-8">
           <h2 className="text-3xl font-bold mb-8 text-center">Chat with Your Documentation</h2>
           
-          {!setupComplete && (
+          <div className="flex items-center space-x-2 mb-4">
+            {useAgentSearch ? (
+              <ToggleRight
+                className="cursor-pointer text-blue-500"
+                onClick={() => setUseAgentSearch(false)}
+              />
+            ) : (
+              <ToggleLeft
+                className="cursor-pointer text-gray-500"
+                onClick={() => setUseAgentSearch(true)}
+              />
+            )}
+            <span>Use Agent Search</span>
+          </div>
+
+          {!setupComplete && !useAgentSearch && (
             <div className="space-y-4 mb-8">
               <input
                 type="text"
@@ -107,23 +138,9 @@ const ChatPage = () => {
                 type="text"
                 value={collectionName}
                 onChange={(e) => setCollectionName(e.target.value)}
-                placeholder={useAgentSearch ? "Collection name (not compulsory)" : "Collection name (required)"}
+                placeholder="Collection name (required)"
                 className="w-full p-3 rounded-lg bg-gray-800 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-white"
               />
-              <div className="flex items-center space-x-2">
-                {useAgentSearch ? (
-                  <ToggleRight
-                    className="cursor-pointer text-blue-500"
-                    onClick={() => setUseAgentSearch(!useAgentSearch)}
-                  />
-                ) : (
-                  <ToggleLeft
-                    className="cursor-pointer text-gray-500"
-                    onClick={() => setUseAgentSearch(!useAgentSearch)}
-                  />
-                )}
-                <span>Use Agent Search</span>
-              </div>
               <button
                 onClick={handleSetup}
                 disabled={isLoading}
@@ -170,7 +187,7 @@ const ChatPage = () => {
           </div>
         </form>
       </div>
-    <Analytics />
+      <Analytics />
     </div>
   );
 };
