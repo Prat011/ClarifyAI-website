@@ -1,9 +1,7 @@
 import React, { useState } from 'react';
-import { SparklesIcon, SearchIcon, Loader, KeyIcon } from 'lucide-react';
+import { SparklesIcon, SearchIcon, Loader2 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
-import { Analytics } from "@vercel/analytics/react";
-
 
 const SheetPage = () => {
   const [sheetId, setSheetId] = useState('');
@@ -13,25 +11,12 @@ const SheetPage = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
 
-  const validateSheetId = (id) => {
-    return typeof id === 'string' && id.length === 44;
-  };
-
-  const validateApiKey = (key) => {
-    return typeof key === 'string' && key.startsWith('sk-');
-  };
-
   const handleSearch = async (e) => {
     e.preventDefault();
     setErrorMessage('');
 
-    if (!validateSheetId(sheetId)) {
-      setErrorMessage('Invalid Google Sheets ID. Please check and try again.');
-      return;
-    }
-
-    if (!validateApiKey(apiKey)) {
-      setErrorMessage('Invalid OpenAI API Key. Please check and try again.');
+    if (!sheetId || !query || !apiKey) {
+      setErrorMessage('Please fill in all fields.');
       return;
     }
 
@@ -42,14 +27,23 @@ const SheetPage = () => {
         query: query,
         api_key: apiKey
       });
-      setMessages(prevMessages => [
-        ...prevMessages,
-        { role: 'user', content: query },
-        { role: 'assistant', content: response.data.response }
-      ]);
-      setQuery('');
+
+      // Log the response for debugging
+      console.log('Response:', response.data);
+
+      if (typeof response.data === 'string') {
+        setMessages(prevMessages => [
+          ...prevMessages,
+          { role: 'user', content: query },
+          { role: 'assistant', content: response.data }
+        ]);
+        setQuery('');
+      } else {
+        throw new Error('Invalid response type');
+      }
     } catch (error) {
-      setErrorMessage(error.response?.data?.detail || error.message || 'An error occurred while processing your query.');
+      console.error('Error:', error);
+      setErrorMessage(error.response?.data || error.message || 'An error occurred while processing your query.');
     } finally {
       setIsLoading(false);
     }
@@ -88,24 +82,20 @@ const SheetPage = () => {
         </div>
 
         <form onSubmit={handleSearch} className="w-full max-w-3xl space-y-4">
-          <div className="flex space-x-2">
-            <input
-              type="text"
-              value={sheetId}
-              onChange={(e) => setSheetId(e.target.value)}
-              placeholder="Enter Google Sheet ID"
-              className="flex-grow p-3 rounded-lg bg-gray-800 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-white"
-            />
-          </div>
-          <div className="flex space-x-2">
-            <input
-              type="password"
-              value={apiKey}
-              onChange={(e) => setApiKey(e.target.value)}
-              placeholder="Enter OpenAI API Key"
-              className="flex-grow p-3 rounded-lg bg-gray-800 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-white"
-            />
-          </div>
+          <input
+            type="text"
+            value={sheetId}
+            onChange={(e) => setSheetId(e.target.value)}
+            placeholder="Enter Google Sheet ID"
+            className="w-full p-3 rounded-lg bg-gray-800 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-white"
+          />
+          <input
+            type="password"
+            value={apiKey}
+            onChange={(e) => setApiKey(e.target.value)}
+            placeholder="Enter OpenAI API Key"
+            className="w-full p-3 rounded-lg bg-gray-800 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-white"
+          />
           <div className="flex space-x-2">
             <input
               type="text"
@@ -119,13 +109,12 @@ const SheetPage = () => {
               disabled={isLoading}
               className="p-3 rounded-lg bg-white text-black hover:bg-gray-200 transition duration-300 flex items-center justify-center"
             >
-              {isLoading ? <Loader className="animate-spin mr-2" /> : <SearchIcon className="mr-2" />}
+              {isLoading ? <Loader2 className="animate-spin mr-2" /> : <SearchIcon className="mr-2" />}
               Search
             </button>
           </div>
         </form>
       </div>
-      <Analytics />
     </div>
   );
 };
