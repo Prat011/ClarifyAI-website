@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
-import { SparklesIcon, SearchIcon, Loader, KeyIcon } from 'lucide-react';
+import { SparklesIcon, SearchIcon, Loader2 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
-import { Analytics } from "@vercel/analytics/react";
 
 const SheetPage = () => {
   const [sheetId, setSheetId] = useState('');
@@ -18,15 +17,6 @@ const SheetPage = () => {
 
   const validateApiKey = (key) => {
     return typeof key === 'string' && key.startsWith('sk-');
-  };
-
-  const checkSheetAccess = async (id) => {
-    try {
-      return true;
-    } catch (error) {
-      console.error('Error checking sheet access:', error);
-      return false;
-    }
   };
 
   const handleSearch = async (e) => {
@@ -45,12 +35,6 @@ const SheetPage = () => {
 
     setIsLoading(true);
     try {
-      const isAccessible = await checkSheetAccess(sheetId);
-      if (!isAccessible) {
-        throw new Error('Unable to access the Google Sheet. Please make sure it\'s public.');
-      }
-
-      // Call the API to process the query
       const response = await axios.post('/sheets_query/', {
         sheet_id: sheetId,
         query: query,
@@ -69,6 +53,7 @@ const SheetPage = () => {
       setIsLoading(false);
     }
   };
+
 
   return (
     <div className="min-h-screen bg-black text-white flex flex-col">
