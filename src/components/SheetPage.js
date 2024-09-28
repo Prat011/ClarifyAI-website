@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
-import { SparklesIcon, SearchIcon, Loader2 } from 'lucide-react';
+import { SparklesIcon, SearchIcon, Loader, KeyIcon } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
+import { Analytics } from "@vercel/analytics/react";
+
 
 const SheetPage = () => {
   const [sheetId, setSheetId] = useState('');
