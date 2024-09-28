@@ -31,15 +31,15 @@ const SheetPage = () => {
       // Log the response for debugging
       console.log('Response:', response.data);
 
-      if (typeof response.data === 'string') {
+      if (response.data && response.data.response) {
         setMessages(prevMessages => [
           ...prevMessages,
           { role: 'user', content: query },
-          { role: 'assistant', content: response.data }
+          { role: 'assistant', content: response.data.response.response || 'No response content' }
         ]);
         setQuery('');
       } else {
-        throw new Error('Invalid response type');
+        throw new Error('Invalid response structure');
       }
     } catch (error) {
       console.error('Error:', error);
