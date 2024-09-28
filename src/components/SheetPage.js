@@ -17,7 +17,7 @@ const SheetPage = () => {
   };
 
   const validateApiKey = (key) => {
-    return typeof key === 'string' && key.startsWith('sk-') && key.length === 51;
+    return typeof key === 'string' && key.startsWith('sk-');
   };
 
   const checkSheetAccess = async (id) => {
