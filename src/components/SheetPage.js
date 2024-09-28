@@ -37,12 +37,11 @@ const SheetPage = () => {
 
     setIsLoading(true);
     try {
-      const response = await axios.post('/sheets_query/', {
+      const response = await axios.post('https://prat0-clarifapi.hf.space/sheets_query/', {
         sheet_id: sheetId,
         query: query,
         api_key: apiKey
       });
-
       setMessages(prevMessages => [
         ...prevMessages,
         { role: 'user', content: query },
