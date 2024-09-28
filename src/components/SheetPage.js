@@ -59,15 +59,15 @@ const SheetPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 flex flex-col">
-      <nav className="bg-white shadow-md">
+    <div className="min-h-screen bg-black text-white flex flex-col">
+      <nav className="bg-black shadow-md">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-16">
             <div className="flex">
-              <div className="flex-shrink-0 flex items-center">
-                <SparklesIcon className="h-8 w-8 text-indigo-600" />
-                <span className="ml-2 text-2xl font-bold text-gray-900">AI Sheets Assistant</span>
-              </div>
+              <Link to="/" className="flex-shrink-0 flex items-center">
+                <SparklesIcon className="h-8 w-8 text-white" />
+                <span className="ml-2 text-2xl font-bold text-white">AI Sheets Assistant</span>
+              </Link>
             </div>
           </div>
         </div>
@@ -75,7 +75,7 @@ const SheetPage = () => {
 
       <main className="flex-grow container mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="max-w-3xl mx-auto">
-          <h1 className="text-3xl font-bold text-gray-900 mb-8 text-center">Chat with Your Google Sheet</h1>
+          <h1 className="text-3xl font-bold text-white mb-8 text-center">Chat with Your Google Sheet</h1>
 
           {errorMessage && (
             <div className="mb-4 p-4 bg-red-100 border border-red-400 text-red-700 rounded">
