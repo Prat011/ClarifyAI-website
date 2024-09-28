@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { SparklesIcon, SearchIcon, Loader, FileIcon } from 'lucide-react';
+import { SparklesIcon, SearchIcon, Loader, KeyIcon } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 import { Analytics } from "@vercel/analytics/react";
@@ -7,12 +7,17 @@ import { Analytics } from "@vercel/analytics/react";
 const SheetPage = () => {
   const [sheetId, setSheetId] = useState('');
   const [query, setQuery] = useState('');
+  const [apiKey, setApiKey] = useState('');
   const [messages, setMessages] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
 
   const validateSheetId = (id) => {
     return typeof id === 'string' && id.length === 44;
+  };
+
+  const validateApiKey = (key) => {
+    return typeof key === 'string' && key.startsWith('sk-') && key.length === 51;
   };
 
   const checkSheetAccess = async (id) => {
@@ -34,6 +39,11 @@ const SheetPage = () => {
       return;
     }
 
+    if (!validateApiKey(apiKey)) {
+      setErrorMessage('Invalid OpenAI API Key. Please check and try again.');
+      return;
+    }
+
     setIsLoading(true);
     try {
       const isAccessible = await checkSheetAccess(sheetId);
@@ -44,7 +54,8 @@ const SheetPage = () => {
       // Call the API to process the query
       const response = await axios.post('/sheets_query/', {
         sheet_id: sheetId,
-        query: query
+        query: query,
+        api_key: apiKey
       });
 
       setMessages(prevMessages => [
@@ -98,6 +109,15 @@ const SheetPage = () => {
               value={sheetId}
               onChange={(e) => setSheetId(e.target.value)}
               placeholder="Enter Google Sheet ID"
+              className="flex-grow p-3 rounded-lg bg-gray-800 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-white"
+            />
+          </div>
+          <div className="flex space-x-2">
+            <input
+              type="password"
+              value={apiKey}
+              onChange={(e) => setApiKey(e.target.value)}
+              placeholder="Enter OpenAI API Key"
               className="flex-grow p-3 rounded-lg bg-gray-800 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-white"
             />
           </div>
