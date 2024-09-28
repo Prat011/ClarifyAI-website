@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { SparklesIcon, SearchIcon, Loader2 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 
 const SheetPage = () => {
   const [sheetId, setSheetId] = useState('');
@@ -28,7 +30,6 @@ const SheetPage = () => {
         api_key: apiKey
       });
 
-      // Log the response for debugging
       console.log('Response:', response.data);
 
       if (response.data && response.data.response) {
@@ -48,7 +49,6 @@ const SheetPage = () => {
       setIsLoading(false);
     }
   };
-
 
   return (
     <div className="min-h-screen bg-black text-white flex flex-col">
@@ -75,7 +75,16 @@ const SheetPage = () => {
           <div className="space-y-4 mb-8 max-h-[60vh] overflow-y-auto">
             {messages.map((message, index) => (
               <div key={index} className={`p-3 rounded-lg ${message.role === 'assistant' ? 'bg-gray-800' : 'bg-gray-700'}`}>
-                <p className="font-league-spartan">{message.content}</p>
+                {message.role === 'assistant' ? (
+                  <ReactMarkdown 
+                    className="font-league-spartan prose prose-invert max-w-none"
+                    remarkPlugins={[remarkGfm]}
+                  >
+                    {message.content}
+                  </ReactMarkdown>
+                ) : (
+                  <p className="font-league-spartan">{message.content}</p>
+                )}
               </div>
             ))}
           </div>

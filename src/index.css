@@ -14,3 +14,33 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+.prose {
+  color: inherit;
+}
+
+.prose a {
+  color: #60a5fa;
+}
+
+.prose strong {
+  color: #f9fafb;
+}
+
+.prose ul, .prose ol {
+  padding-left: 1.5em;
+}
+
+.prose code {
+  color: #e5e7eb;
+  background-color: #374151;
+  padding: 0.2em 0.4em;
+  border-radius: 0.25em;
+}
+
+.prose pre {
+  background-color: #1f2937;
+  padding: 1em;
+  border-radius: 0.5em;
+  overflow-x: auto;
+}
