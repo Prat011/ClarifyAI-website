@@ -3,6 +3,17 @@ import { Link } from 'react-router-dom';
 import { SparklesIcon, SearchIcon, Loader, ToggleLeft, ToggleRight } from 'lucide-react';
 import axios from 'axios';
 import { Analytics } from "@vercel/analytics/react";
+import ReactMarkdown from 'react-markdown';
+import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
+import { dracula } from 'react-syntax-highlighter/dist/esm/styles/prism';
+
+const CodeBlock = ({ language, value }) => {
+  return (
+    <SyntaxHighlighter language={language} style={dracula}>
+      {value}
+    </SyntaxHighlighter>
+  );
+};
 
 const ChatPage = () => {
   const [docLink, setDocLink] = useState('');
@@ -161,7 +172,31 @@ const ChatPage = () => {
           <div className="space-y-4 mb-8 max-h-[60vh] overflow-y-auto">
             {messages.map((message, index) => (
               <div key={index} className={`p-3 rounded-lg ${message.role === 'assistant' ? 'bg-gray-800' : 'bg-gray-700'}`}>
-                <p className="font-league-spartan">{message.content}</p>
+                {message.role === 'assistant' ? (
+                  <ReactMarkdown
+                    className="font-league-spartan prose prose-invert"
+                    components={{
+                      code({ node, inline, className, children, ...props }) {
+                        const match = /language-(\w+)/.exec(className || '');
+                        return !inline && match ? (
+                          <CodeBlock
+                            language={match[1]}
+                            value={String(children).replace(/\n$/, '')}
+                            {...props}
+                          />
+                        ) : (
+                          <code className={className} {...props}>
+                            {children}
+                          </code>
+                        );
+                      }
+                    }}
+                  >
+                    {message.content}
+                  </ReactMarkdown>
+                ) : (
+                  <p className="font-league-spartan">{message.content}</p>
+                )}
               </div>
             ))}
           </div>
