@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ChatAnthropic } from "langchain/chat_models/anthropic";
+import { ChatAnthropic } from "@langchain/anthropic";
 import { AgentExecutor, createToolCallingAgent } from "langchain/agents";
 import { SerpAPI } from "langchain/tools";
 import { Calculator } from "langchain/tools/calculator";
