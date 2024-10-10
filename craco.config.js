@@ -8,10 +8,6 @@ module.exports = {
       webpackConfig.resolve.fallback = {
         ...webpackConfig.resolve.fallback,
         "path": false,
-        fs: false,
-        net: false,
-        tls: false,
-        buffer: require.resolve('buffer'),
     };
 
       webpackConfig.plugins.push(
