@@ -71,6 +71,10 @@ const LandingPage = () => {
               <FileIcon className="inline-block mr-2" size={20} />
               Sheet Assistant
             </Link>
+            <Link to="/claude" className="block md:inline-block w-full md:w-auto bg-brown-500 text-white hover:bg-white-600 font-bold py-3 px-8 rounded-full text-lg transition duration-300">
+              <FileIcon className="inline-block mr-2" size={20} />
+              Claude with Internet
+            </Link>
             <button onClick={() => scrollTo('features')} className="block md:inline-block w-full md:w-auto bg-transparent border-2 border-white text-white hover:bg-white hover:text-black font-bold py-3 px-8 rounded-full text-lg transition duration-300">
               Learn More
             </button>
