@@ -7,7 +7,7 @@ module.exports = {
       // Polyfills
       webpackConfig.resolve.fallback = {
         ...webpackConfig.resolve.fallback,
-        path: require.resolve('path-browserify'),
+        "path": false,
         fs: false,
         net: false,
         tls: false,
