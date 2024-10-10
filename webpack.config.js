@@ -1,16 +1,24 @@
+// next.config.js
 const webpack = require('webpack');
 
 module.exports = {
-    resolve: {
-        fallback: {
-            "path": require.resolve("path-browserify"),
-            // Add other Node.js core modules here if needed
-        }
-    },
-    plugins: [
-        new webpack.ProvidePlugin({
-            process: 'process/browser',
-            Buffer: ['buffer', 'Buffer'],
-        })
-    ]
+  webpack: (config, { isServer }) => {
+    if (!isServer) {
+      config.resolve.fallback = {
+        ...config.resolve.fallback,
+        fs: false,
+        net: false,
+        tls: false,
+        path: require.resolve('path-browserify'),
+      };
+    }
+
+    config.plugins.push(
+      new webpack.ProvidePlugin({
+        process: 'process/browser',
+      })
+    );
+
+    return config;
+  },
 };
