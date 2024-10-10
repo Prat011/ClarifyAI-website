@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { ChatAnthropic } from "@langchain/anthropic";
 import { AgentExecutor, createToolCallingAgent } from "langchain/agents";
+import { LangchainToolSet } from 'composio-core';
+
 
 const AnthropicChatInterface = () => {
   const [anthropicApiKey, setAnthropicApiKey] = useState('');
