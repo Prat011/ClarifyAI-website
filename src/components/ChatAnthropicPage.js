@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { ChatAnthropic } from "@langchain/anthropic";
 import { AgentExecutor, createToolCallingAgent } from "langchain/agents";
 import { LangchainToolSet } from 'composio-core';
+import { ChatPromptTemplate } from "@langchain/core/prompts";
 
 
 const AnthropicChatInterface = () => {
@@ -34,16 +35,19 @@ const AnthropicChatInterface = () => {
       const toolset = new LangchainToolSet({ apiKey: composioApiKey });
 
       const tools = await toolset.getTools({ apps: ["exa","tavily"] });
+      const prompt = ChatPromptTemplate.fromMessages([
+        ["system", "You are a helpful assistant"],
+        ["placeholder", "{chat_history}"],
+        ["human", "{input}"],
+        ["placeholder", "{agent_scratchpad}"],
+      ]);
       const executor = await createToolCallingAgent(
         tools,
         model,
-        {
-          agentType: "chat-zero-shot-react-description",
-          verbose: true,
-        }
+        prompt
       );
 
-      const result = await executor.call({ input: query });
+      const result = await executor.invoke({ input: query });
 
       setResponse(result.output);
       setChatHistory([...chatHistory, { query, response: result.output }]);
